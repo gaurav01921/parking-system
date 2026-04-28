@@ -1,0 +1,36 @@
+{
+    "name": "parking-system",
+    "version": "1.0.0",
+    "description": "Vehicle Parking Management System - Full Stack Application",
+    "main": "backend/server.js",
+    "scripts": {
+        "setup": "npm install && cd backend && npm install && cd ../frontend && npm install",
+        "backend": "cd backend && npm start",
+        "backend:dev": "cd backend && npm run dev",
+        "frontend": "cd frontend && npm start",
+        "frontend:build": "cd frontend && npm run build",
+        "web": "npm run frontend"
+    },
+    "keywords": [
+        "parking",
+        "management",
+        "system",
+        "react",
+        "node",
+        "express",
+        "mysql"
+    ],
+    "author": "Your Name",
+    "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/yourusername/parking-system.git"
+    },
+    "engines": {
+        "node": ">=14.0.0",
+        "npm": ">=6.0.0"
+    },
+    "dependencies": {
+        "mysql2": "^3.22.3"
+    }
+}
