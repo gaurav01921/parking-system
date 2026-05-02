@@ -1,93 +1,93 @@
 import React, { useState } from 'react';
-import { FaParking, FaSignInAlt, FaSignOutAlt } from 'react-icons/fa';
+import { Car, LogOut, Loader2, Search } from 'lucide-react';
 
 const ParkingForm = ({ onPark, onExit, loading }) => {
-    const [vehicleNumber, setVehicleNumber] = useState('');
-    const [action, setAction] = useState('park');
+  const [vehicleNumber, setVehicleNumber] = useState('');
+  const [mode, setMode] = useState('park'); // 'park' or 'exit'
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!vehicleNumber.trim()) return;
 
-        if (!vehicleNumber.trim()) {
-            alert('Please enter a vehicle number');
-            return;
-        }
+    if (mode === 'park') {
+      onPark(vehicleNumber);
+    } else {
+      onExit(vehicleNumber);
+    }
+    setVehicleNumber('');
+  };
 
-        if (action === 'park') {
-            onPark(vehicleNumber);
-        } else {
-            onExit(vehicleNumber);
-        }
+  return (
+    <div className="glass rounded-3xl p-8 mb-12 shadow-2xl border border-white/10 relative overflow-hidden">
+      <div className="absolute top-0 right-0 p-8 opacity-[0.02] pointer-events-none">
+        <Car size={160} />
+      </div>
 
-        setVehicleNumber('');
-    };
+      <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-8 relative z-10">
+        <div className="space-y-2">
+          <h2 className="text-3xl font-bold tracking-tight text-white leading-tight">Vehicle Actions</h2>
+          <p className="text-white/50 font-medium">Quickly park or exit vehicles from the system</p>
+        </div>
 
-    return (
-        <form
-            onSubmit={handleSubmit}
-            className="bg-white rounded-lg shadow-lg p-8 mb-8 max-w-md mx-auto"
+        <div className="flex bg-white/5 p-1 rounded-2xl border border-white/5 self-start">
+          <button
+            onClick={() => setMode('park')}
+            className={`px-6 py-2.5 rounded-xl text-sm font-bold transition-all duration-300 flex items-center gap-2 ${
+              mode === 'park' ? 'bg-blue-500 text-white shadow-lg shadow-blue-500/25' : 'text-white/40 hover:text-white/70'
+            }`}
+          >
+            <Car className="w-4 h-4" />
+            Entry
+          </button>
+          <button
+            onClick={() => setMode('exit')}
+            className={`px-6 py-2.5 rounded-xl text-sm font-bold transition-all duration-300 flex items-center gap-2 ${
+              mode === 'exit' ? 'bg-rose-500 text-white shadow-lg shadow-rose-500/25' : 'text-white/40 hover:text-white/70'
+            }`}
+          >
+            <LogOut className="w-4 h-4" />
+            Exit
+          </button>
+        </div>
+      </div>
+
+      <form onSubmit={handleSubmit} className="mt-10 flex flex-col sm:flex-row gap-4">
+        <div className="relative flex-1 group">
+          <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none text-white/30 group-focus-within:text-blue-400 transition-colors">
+            <Search className="w-5 h-5" />
+          </div>
+          <input
+            type="text"
+            value={vehicleNumber}
+            onChange={(e) => setVehicleNumber(e.target.value.toUpperCase())}
+            placeholder="ENTER VEHICLE NUMBER (E.G. MH12AB1234)"
+            className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 pl-12 pr-4 text-white placeholder:text-white/20 focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all font-mono tracking-widest outline-none"
+            required
+          />
+        </div>
+
+        <button
+          type="submit"
+          disabled={loading || !vehicleNumber}
+          className={`px-10 py-4 rounded-2xl font-bold transition-all flex items-center justify-center gap-3 min-w-[200px] shadow-xl ${
+            mode === 'park' 
+              ? 'bg-blue-500 hover:bg-blue-400 text-white shadow-blue-500/20' 
+              : 'bg-rose-500 hover:bg-rose-400 text-white shadow-rose-500/20'
+          } disabled:opacity-50 disabled:cursor-not-allowed`}
         >
-            <h2 className="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-2">
-                <FaParking className="text-blue-600" />
-                Parking Control
-            </h2>
-
-            <div className="mb-6">
-                <label className="block text-gray-700 font-semibold mb-2">
-                    Vehicle Number
-                </label>
-                <input
-                    type="text"
-                    value={vehicleNumber}
-                    onChange={(e) => setVehicleNumber(e.target.value.toUpperCase())}
-                    placeholder="e.g., ABC123"
-                    className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-600 transition-colors"
-                    disabled={loading}
-                />
-            </div>
-
-            <div className="mb-6 flex gap-4">
-                <label className="flex items-center gap-2 cursor-pointer">
-                    <input
-                        type="radio"
-                        value="park"
-                        checked={action === 'park'}
-                        onChange={(e) => setAction(e.target.value)}
-                        disabled={loading}
-                        className="w-4 h-4"
-                    />
-                    <span className="text-gray-700 flex items-center gap-1">
-                        <FaSignInAlt /> Park
-                    </span>
-                </label>
-
-                <label className="flex items-center gap-2 cursor-pointer">
-                    <input
-                        type="radio"
-                        value="exit"
-                        checked={action === 'exit'}
-                        onChange={(e) => setAction(e.target.value)}
-                        disabled={loading}
-                        className="w-4 h-4"
-                    />
-                    <span className="text-gray-700 flex items-center gap-1">
-                        <FaSignOutAlt /> Exit
-                    </span>
-                </label>
-            </div>
-
-            <button
-                type="submit"
-                disabled={loading}
-                className={`w-full py-3 px-6 rounded-lg font-bold text-white transition-all duration-300 ${action === 'park'
-                        ? 'bg-green-500 hover:bg-green-600 disabled:bg-gray-400'
-                        : 'bg-red-500 hover:bg-red-600 disabled:bg-gray-400'
-                    }`}
-            >
-                {loading ? 'Processing...' : action === 'park' ? 'Park Vehicle' : 'Exit Vehicle'}
-            </button>
-        </form>
-    );
+          {loading ? (
+            <Loader2 className="w-5 h-5 animate-spin" />
+          ) : (
+            <>
+              {mode === 'park' ? <Car className="w-5 h-5" /> : <LogOut className="w-5 h-5" />}
+              <span>{mode === 'park' ? 'Confirm Entry' : 'Process Exit'}</span>
+            </>
+          )}
+        </button>
+      </form>
+    </div>
+  );
 };
 
 export default ParkingForm;
+

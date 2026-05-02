@@ -4,11 +4,15 @@
     "private": true,
     "proxy": "http://localhost:5000",
     "dependencies": {
+        "axios": "^1.4.0",
+        "clsx": "^2.1.1",
+        "framer-motion": "^12.38.0",
+        "lucide-react": "^1.14.0",
         "react": "^18.2.0",
         "react-dom": "^18.2.0",
-        "react-scripts": "5.0.1",
         "react-icons": "^4.11.0",
-        "axios": "^1.4.0"
+        "react-scripts": "5.0.1",
+        "tailwind-merge": "^3.5.0"
     },
     "scripts": {
         "start": "react-scripts start",
@@ -34,8 +38,8 @@
         ]
     },
     "devDependencies": {
-        "tailwindcss": "^3.3.0",
+        "autoprefixer": "^10.4.14",
         "postcss": "^8.4.24",
-        "autoprefixer": "^10.4.14"
+        "tailwindcss": "^3.3.0"
     }
 }

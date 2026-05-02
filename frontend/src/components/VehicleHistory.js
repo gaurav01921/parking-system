@@ -1,69 +1,98 @@
 import React from 'react';
-import { FaCar, FaSpinner } from 'react-icons/fa';
+import { Car, Loader2, ArrowRightCircle, ArrowLeftCircle, CheckCircle2 } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 const VehicleHistory = ({ vehicles, loading }) => {
     if (loading) {
         return (
-            <div className="flex items-center justify-center py-12">
-                <FaSpinner className="text-4xl text-blue-600 animate-spin" />
-                <span className="ml-3 text-lg text-gray-600">Loading vehicles...</span>
+            <div className="flex flex-col items-center justify-center py-20 gap-4">
+                <Loader2 className="w-10 h-10 text-blue-400 animate-spin" />
+                <span className="text-sm font-bold text-white/40 uppercase tracking-widest">Accessing records...</span>
             </div>
         );
     }
 
     if (vehicles.length === 0) {
         return (
-            <div className="text-center py-12 bg-gray-50 rounded-lg">
-                <FaCar className="text-4xl text-gray-400 mx-auto mb-3" />
-                <p className="text-gray-600 font-semibold">No vehicle history yet</p>
+            <div className="text-center py-20 bg-white/5 rounded-3xl border border-white/5">
+                <Car className="w-12 h-12 text-white/10 mx-auto mb-4" />
+                <p className="text-white/30 font-bold uppercase tracking-widest text-sm">No History Found</p>
             </div>
         );
     }
 
     return (
-        <div className="bg-white rounded-lg shadow-lg overflow-hidden">
-            <table className="w-full">
-                <thead className="bg-gradient-to-r from-blue-600 to-blue-700 text-white">
-                    <tr>
-                        <th className="px-6 py-4 text-left text-sm font-bold">Vehicle #</th>
-                        <th className="px-6 py-4 text-left text-sm font-bold">Slot</th>
-                        <th className="px-6 py-4 text-left text-sm font-bold">Entry Time</th>
-                        <th className="px-6 py-4 text-left text-sm font-bold">Exit Time</th>
-                        <th className="px-6 py-4 text-left text-sm font-bold">Status</th>
+        <div className="overflow-x-auto">
+            <table className="w-full text-left border-collapse">
+                <thead>
+                    <tr className="bg-white/5">
+                        <th className="px-6 py-5 text-[10px] font-black uppercase tracking-[0.2em] text-white/40">Vehicle ID</th>
+                        <th className="px-6 py-5 text-[10px] font-black uppercase tracking-[0.2em] text-white/40">Slot Zone</th>
+                        <th className="px-6 py-5 text-[10px] font-black uppercase tracking-[0.2em] text-white/40">Check-In</th>
+                        <th className="px-6 py-5 text-[10px] font-black uppercase tracking-[0.2em] text-white/40">Check-Out</th>
+                        <th className="px-6 py-5 text-[10px] font-black uppercase tracking-[0.2em] text-white/40">Status</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody className="divide-y divide-white/5">
                     {vehicles.map((vehicle, index) => (
-                        <tr
+                        <motion.tr
                             key={index}
-                            className={`border-b transition-colors hover:bg-gray-50 ${index % 2 === 0 ? 'bg-gray-50' : 'bg-white'
-                                }`}
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            transition={{ delay: index * 0.05 }}
+                            className="hover:bg-white/[0.02] transition-colors"
                         >
-                            <td className="px-6 py-4 font-mono font-bold text-gray-800">
-                                {vehicle.vehicleNumber}
+                            <td className="px-6 py-4">
+                                <div className="flex items-center gap-3">
+                                    <div className="w-8 h-8 rounded-lg bg-blue-500/10 flex items-center justify-center">
+                                        <Car className="w-4 h-4 text-blue-400" />
+                                    </div>
+                                    <span className="font-mono font-bold text-white/90">{vehicle.vehicleNumber}</span>
+                                </div>
                             </td>
-                            <td className="px-6 py-4 text-center font-semibold text-gray-700">
-                                {vehicle.slotNumber}
+                            <td className="px-6 py-4">
+                                <span className="font-bold text-white/60">A-{vehicle.slotNumber}</span>
                             </td>
-                            <td className="px-6 py-4 text-sm text-gray-600">
-                                {new Date(vehicle.entryTime).toLocaleString()}
+                            <td className="px-6 py-4">
+                                <div className="flex items-center gap-2 text-white/50 text-xs font-medium">
+                                    <ArrowRightCircle className="w-3 h-3 text-emerald-400" />
+                                    {new Date(vehicle.entryTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                    <span className="opacity-40">{new Date(vehicle.entryTime).toLocaleDateString()}</span>
+                                </div>
                             </td>
-                            <td className="px-6 py-4 text-sm text-gray-600">
-                                {vehicle.exitTime
-                                    ? new Date(vehicle.exitTime).toLocaleString()
-                                    : '-'}
+                            <td className="px-6 py-4">
+                                {vehicle.exitTime ? (
+                                    <div className="flex items-center gap-2 text-white/50 text-xs font-medium">
+                                        <ArrowLeftCircle className="w-3 h-3 text-rose-400" />
+                                        {new Date(vehicle.exitTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                        <span className="opacity-40">{new Date(vehicle.exitTime).toLocaleDateString()}</span>
+                                    </div>
+                                ) : (
+                                    <span className="text-white/20 text-[10px] font-black uppercase tracking-widest italic">In Progress</span>
+                                )}
                             </td>
                             <td className="px-6 py-4">
                                 <span
-                                    className={`px-3 py-1 rounded-full text-xs font-bold ${vehicle.status === 'parked'
-                                            ? 'bg-yellow-100 text-yellow-800'
-                                            : 'bg-green-100 text-green-800'
-                                        }`}
+                                    className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest ${
+                                        vehicle.status === 'parked'
+                                            ? 'bg-amber-500/10 text-amber-400 border border-amber-500/20'
+                                            : 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
+                                    }`}
                                 >
-                                    {vehicle.status === 'parked' ? 'PARKED' : 'EXITED'}
+                                    {vehicle.status === 'parked' ? (
+                                        <>
+                                            <div className="w-1 h-1 rounded-full bg-amber-400 animate-pulse" />
+                                            Active
+                                        </>
+                                    ) : (
+                                        <>
+                                            <CheckCircle2 className="w-3 h-3" />
+                                            Completed
+                                        </>
+                                    )}
                                 </span>
                             </td>
-                        </tr>
+                        </motion.tr>
                     ))}
                 </tbody>
             </table>
@@ -72,3 +101,4 @@ const VehicleHistory = ({ vehicles, loading }) => {
 };
 
 export default VehicleHistory;
+
