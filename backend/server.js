@@ -53,10 +53,15 @@ app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;
 
-app.listen(PORT, async () => {
-    await initializeDatabase();
-    console.log(`\n🚗 Parking System Server running on http://localhost:${PORT}`);
-    console.log(`📊 API Documentation: http://localhost:${PORT}/api/health\n`);
-});
+if (process.env.NODE_ENV !== 'production') {
+    app.listen(PORT, async () => {
+        await initializeDatabase();
+        console.log(`\n🚗 Parking System Server running on http://localhost:${PORT}`);
+        console.log(`📊 API Documentation: http://localhost:${PORT}/api/health\n`);
+    });
+} else {
+    // For production/serverless, ensure DB is initialized
+    initializeDatabase();
+}
 
 module.exports = app;
